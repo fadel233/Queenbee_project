@@ -1,0 +1,72 @@
+
+
+```http
+@baseUrl = http://localhost:3000
+
+### GET /health (200)
+GET {{baseUrl}}/health
+
+### GET /api/hives : toutes les ruches (200)
+GET {{baseUrl}}/api/hives
+
+### GET /api/hives?site_id=SN-CASA : filtre par site (200)
+GET {{baseUrl}}/api/hives?site_id=SN-CASA
+
+### GET /api/hives/SN-CASA-001 (200)
+GET {{baseUrl}}/api/hives/SN-CASA-001
+
+### GET /api/hives/XX-NOPE-999 : ruche inconnue (404)
+GET {{baseUrl}}/api/hives/XX-NOPE-999
+
+### POST mesure valide (201)
+POST {{baseUrl}}/api/hives/SN-CASA-001/measures
+Content-Type: application/json
+
+{
+  "hive_id": "SN-CASA-001",
+  "site_id": "SN-CASA",
+  "timestamp": "2026-10-31T10:00:00Z",
+  "position_lat": 12.5743,
+  "position_lon": -16.2873,
+  "weight_kg": 36.84,
+  "temp_internal_c": 34.4,
+  "temp_external_c": 27.1,
+  "humidity_pct": 64,
+  "acoustic_activity_score": 0.42,
+  "battery_pct": 88
+}
+
+### POST mesure sans timestamp (400)
+POST {{baseUrl}}/api/hives/SN-CASA-001/measures
+Content-Type: application/json
+
+{
+  "weight_kg": 36.84
+}
+
+### POST mesure sans weight_kg (400)
+POST {{baseUrl}}/api/hives/SN-CASA-001/measures
+Content-Type: application/json
+
+{
+  "timestamp": "2026-10-31T10:00:00Z"
+}
+
+### POST hive_id différent du chemin (400)
+POST {{baseUrl}}/api/hives/SN-CASA-001/measures
+Content-Type: application/json
+
+{
+  "hive_id": "SN-CASA-002",
+  "timestamp": "2026-10-31T10:00:00Z",
+  "weight_kg": 36.84
+}
+
+### POST ruche inconnue (404)
+POST {{baseUrl}}/api/hives/XX-NOPE-999/measures
+Content-Type: application/json
+
+{
+  "timestamp": "2026-10-31T10:00:00Z",
+  "weight_kg": 36.84
+}
